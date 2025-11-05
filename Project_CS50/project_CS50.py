@@ -11,8 +11,12 @@ train_seats_data = BASE_DIR / "data" / "train_seats.json"
 # Train class to handle seat bookings
 class Train:
     def __init__(self):
-        with open(train_seats_data,"r") as data:
-            self.seats_data = json.load(data) 
+        if train_seats_data.exists():
+            with open(train_seats_data,"r") as data:
+                self.seats_data = json.load(data) 
+        else:
+            with open(train_seats_data,"w") as data:
+                json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, data, indent=4)
 
     def book_lower(self):
         if self.seats_data["seats"]["lower_seats"] > 0:
@@ -91,19 +95,22 @@ def book_ticket(a):
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Lower-seat"    
+            else:
+                return "Lower-seat"    
         elif 30 <= age <= 60:
             status = train.book_middle()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Middle-seat"
+            else:
+                return "Middle-seat"
         else:
             status = train.book_upper()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Upper-seat" 
+            else:
+                return "Upper-seat" 
 
 
 # Function to create and save the ticket details
