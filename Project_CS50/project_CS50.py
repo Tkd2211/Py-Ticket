@@ -95,19 +95,22 @@ def book_ticket(a):
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Lower-seat"    
+            else:
+                return "Lower-seat"    
         elif 30 <= age <= 60:
             status = train.book_middle()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Middle-seat"
+            else:
+                return "Middle-seat"
         else:
             status = train.book_upper()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            return "Upper-seat" 
+            else:
+                return "Upper-seat" 
 
 
 # Function to create and save the ticket details
@@ -121,3 +124,4 @@ def create_ticket(username, name, age, passenger_count, seat_type):  # only disp
 
 if __name__ == "__main__":
     main()
+
