@@ -2,21 +2,18 @@ import pyfiglet
 from my_utilities.my_functions import get_input
 import json
 from pathlib import Path
+import random 
 
 registered_users = ["User_1", "User_2"]
 BASE_DIR = Path(__file__).resolve().parent
-train_seats_data = BASE_DIR / "data" / "train_seats.json"
-
+train_seats_data = BASE_DIR / "data" / "train_seats_count.json"
+train_seats_number = BASE_DIR / "data" / "train_seats_number.json"
 
 # Train class to handle seat bookings
 class Train:
     def __init__(self):
-        if train_seats_data.exists():
-            with open(train_seats_data,"r") as data:
-                self.seats_data = json.load(data) 
-        else:
-            with open(train_seats_data,"w") as data:
-                json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, data, indent=4)
+        with open(train_seats_data,"r") as data:
+            self.seats_data = json.load(data) 
 
     def book_lower(self):
         if self.seats_data["seats"]["lower_seats"] > 0:
@@ -85,7 +82,7 @@ def get_booking_details():
         age.append(get_input(prompt="Age: ", required=True, input_type="int", error_prompt="Not a valid age!"))
     return (name, age, passenger_count)
 
-#Yashhhhhhhhhhhhhhhhhh
+# AGE-FILTER
 # ADD ALGORITHM TO BOOK SEAT TYPE BASED ON AGE FILTERING
 def book_ticket(a):  
     train = Train()
@@ -95,14 +92,14 @@ def book_ticket(a):
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            else:
+            else: 
                 return "Lower-seat"    
         elif 30 <= age <= 60:
             status = train.book_middle()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
-            else:
+            else: 
                 return "Middle-seat"
         else:
             status = train.book_upper()
@@ -112,16 +109,25 @@ def book_ticket(a):
             else:
                 return "Upper-seat" 
 
+# ID Genrator
+def id_genrator(seat_type):
+    if seat_type == "Lower-seat":
+        seat_code = "L"
+    elif seat_type == "Middle-seat":
+        seat_code = "M"
+    else:
+        seat_code = "U"
+    return f"{seat_code}-{random.randint(0,9)}{random.choice('ABCDEFGHIJKLMNPQRSTUVWXYZ')}{random.randint(0,9)}{random.choice('ABCDEFGHIJKLMNPQRSTUVWXYZ')}"
+
 
 # Function to create and save the ticket details
 def create_ticket(username, name, age, passenger_count, seat_type):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
     for i in range(passenger_count):
         with open("ticket.txt", "w") as file:
             file.write(
-                f"Ticket under : {username}\n Name: {name[i]}\n Age: {age[i]}\n Seat: {seat_type}"
+                f"Ticket under : {username}\n Ticket Id: {id_genrator(seat_type)}\n Name: {name[i]}\n Age: {age[i]}\n Seat: {seat_type}"
             )
 
 
 if __name__ == "__main__":
     main()
-
