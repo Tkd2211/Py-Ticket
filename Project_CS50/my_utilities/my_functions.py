@@ -1,4 +1,3 @@
-# GET USER INPUT
 def get_input(
     prompt="input: ",
     input_type="str",
@@ -15,7 +14,7 @@ def get_input(
             value = input(prompt).strip()
         elif input_type == "int":
             try:
-                value = int(input(prompt))
+                value = int(input(prompt).strip())
             except ValueError:
                 if error_prompt == None:
                     print("Not an integer value")
@@ -24,7 +23,7 @@ def get_input(
                 continue
         elif input_type == "float":
             try:
-                value = float(input(prompt))
+                value = float(input(prompt).strip())
             except ValueError:
                 if error_prompt == None:
                     print("Not a floating point value")
