@@ -1,5 +1,11 @@
 # GET USER INPUT
-def get_input(prompt="input: ", input_type="str", required=False, give_parameters=False, error_prompt=None):
+def get_input(
+    prompt="input: ",
+    input_type="str",
+    required=False,
+    give_parameters=False,
+    error_prompt=None,
+):
     if give_parameters:
         print('get_input(prompt="input: ", type="str", required=False)')
         return None
@@ -11,7 +17,7 @@ def get_input(prompt="input: ", input_type="str", required=False, give_parameter
             try:
                 value = int(input(prompt))
             except ValueError:
-                if error_prompt==None:
+                if error_prompt == None:
                     print("Not an integer value")
                 else:
                     print(error_prompt)
@@ -20,7 +26,7 @@ def get_input(prompt="input: ", input_type="str", required=False, give_parameter
             try:
                 value = float(input(prompt))
             except ValueError:
-                if error_prompt==None:
+                if error_prompt == None:
                     print("Not a floating point value")
                 else:
                     print(error_prompt)
@@ -30,7 +36,7 @@ def get_input(prompt="input: ", input_type="str", required=False, give_parameter
                 f"Invalid type '{input_type}' passed to get_input(). Valid input_types: 'str', 'int', 'float'."
             )
 
-        if required and (value== "" or value is None):
+        if required and (value == "" or value is None):
             print("This is a required field")
             continue
 
@@ -41,7 +47,9 @@ def get_input(prompt="input: ", input_type="str", required=False, give_parameter
 
 
 def use_example():
-    num = get_input("Whats the number? ", input_type="int", required=True, error_prompt="Bad")
+    num = get_input(
+        "Whats the number? ", input_type="int", required=True, error_prompt="Bad"
+    )
     print("The number you typed is:", num)
 
 
