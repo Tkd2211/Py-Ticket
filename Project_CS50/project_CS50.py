@@ -26,6 +26,8 @@ class Train:
         else:
             with open(self._train_seats_data,"w") as data:
                 json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, data, indent=4)
+            with open(self._train_seats_data,"r") as data:
+                self.seats_data = json.load(data)
 
     def book_lower(self):
         if self.seats_data["seats"]["lower_seats"] > 0:
