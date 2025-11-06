@@ -3,22 +3,34 @@ from my_utilities.my_functions import get_input
 import json
 from pathlib import Path
 import random 
+import sys
 
 registered_users = ["User_1", "User_2"]
-BASE_DIR = Path(__file__).resolve().parent
-train_seats_data = BASE_DIR / "data" / "train_seats_count.json"
-train_seats_number = BASE_DIR / "data" / "train_seats_number.json"
+
+def get_json_data_path(file):
+    BASE_DIR = Path(__file__).resolve().parent
+    if file == "train_seats_count":
+        return BASE_DIR / "data" / "train_seats_count.json"
+    elif file == "train_seat_number":
+        return BASE_DIR / "data" / "train_seat_number.json"
+    else:
+        raise ValueError(f"Invalid file key: {file}. Expected 'train_seats_count' or 'train_seat_number'.")
 
 # Train class to handle seat bookings
 class Train:
     def __init__(self):
-        with open(train_seats_data,"r") as data:
-            self.seats_data = json.load(data) 
+        self._train_seats_data = get_json_data_path(file="train_seats_count")
+        if self._train_seats_data.exists():
+            with open(self._train_seats_data,"r") as data:
+                self.seats_data = json.load(data) 
+        else:
+            with open(self._train_seats_data,"w") as data:
+                json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, data, indent=4)
 
     def book_lower(self):
         if self.seats_data["seats"]["lower_seats"] > 0:
             self.seats_data["seats"]["lower_seats"] -= 1
-            with open(train_seats_data,"w") as file:
+            with open(self._train_seats_data,"w") as file:
                 json.dump(self.seats_data, file, indent=4)
             print("Lower seat booked successfully!")
         else:
@@ -28,7 +40,7 @@ class Train:
     def book_upper(self):
         if self.seats_data["seats"]["upper_seats"] > 0:
             self.seats_data["seats"]["upper_seats"] -= 1
-            with open(train_seats_data,"w") as file:
+            with open(self._train_seats_data,"w") as file:
                 json.dump(self.seats_data, file, indent=4)
             print("Upper seat booked successfully!")
         elif self.seats_data["seats"]["upper_seats"] + self.seats_data["seats"]["middle_seats"] + self.seats_data["seats"]["lower_seats"] > 0:
@@ -42,13 +54,12 @@ class Train:
     def book_middle(self):
         if self.seats_data["seats"]["middle_seats"] > 0:
             self.seats_data["seats"]["middle_seats"] -= 1
-            with open(train_seats_data,"w") as file:
+            with open(self._train_seats_data,"w") as file:
                 json.dump(self.seats_data, file, indent=4)
             print("Middle seat booked successfully!")
         else:
             status = self.book_upper()
             return status
-
 
 # Main function to run the ticket booking system
 def main():
@@ -85,7 +96,10 @@ def get_booking_details():
 # AGE-FILTER
 # ADD ALGORITHM TO BOOK SEAT TYPE BASED ON AGE FILTERING
 def book_ticket(a):  
-    train = Train()
+    try:
+        train = Train()
+    except Exception:
+        sys.exit("Error occured!")
     for age in a:
         if age > 60:
             status = train.book_lower()
