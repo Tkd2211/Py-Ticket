@@ -88,19 +88,21 @@ def assign_seat_number(seat_type):
     with open(train_seat_number,"r") as seat_number_data:
         seat_number_array = json.load(seat_number_data)
     try:    
-        if seat_type == "Lower-seat":
+        if seat_type == LOWER :
                 seat_number = seat_number_array["seat_number"]["lower_seat_number"].pop(0)
-        elif seat_type == "Middle-seat":
+        elif seat_type == MIDDLE:
             seat_number = seat_number_array["seat_number"]["middle_seat_number"].pop(0)
-        else:
+        elif seat_type == UPPER:
             seat_number = seat_number_array["seat_number"]["upper_seat_number"].pop(0)
+        else:
+            return None
     except IndexError:
         return None
 
     with open(train_seat_number,"w") as seat_number_file:
         json.dump(seat_number_array, seat_number_file, indent=4)
     return seat_number
-
+    
 # Function to verify registered users
 def get_verified_user():
     while True:
@@ -161,4 +163,5 @@ def create_ticket(username, name, age, seat_type):
 
 if __name__ == "__main__":
     main()
+
 
