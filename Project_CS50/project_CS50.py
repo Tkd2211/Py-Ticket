@@ -65,12 +65,12 @@ class Train:
         
 
 #seat number data structure
-def assign_seat_number(seat_type):
+def assign_seat_number(seat_type):                        #Handle IndexError in case all seats in a seat type getting booked (empty list).
     train_seat_number = get_json_data_path(file="train_seat_number")
     seat_number_array = {}
-    with open(train_seat_number,"r") as seat_number_data:
+    with open(train_seat_number,"r") as seat_number_data:                    
         seat_number_array = json.load(seat_number_data)
-        if seat_type == "Lower-seat":
+        if seat_type == "Lower-seat":                     #Remove the conditional block from being indented inside file I/O
                 seat_number = seat_number_array["seat_number"]["lower_seat_number"].pop(0)
         elif seat_type == "Middle-seat":
             seat_number = seat_number_array["seat_number"]["middle_seat_number"].pop(0)
@@ -113,8 +113,8 @@ def get_booking_details(i):
 def book_ticket(username, passenger_count):
     for i in range(passenger_count):
         name, age = get_booking_details(i)
-        try:
-            train = Train()
+        try:                                                         
+            train = Train()                        #Move this instantiation out of the loop 
         except Exception:
             sys.exit("Error occured!")
         if age > 60:
@@ -152,12 +152,14 @@ def id_genrator(seat_type):
 
 
 # Function to create and save the ticket details
-def create_ticket(username, name, age, seat_type):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
-    with open("ticket1.txt", "a") as file:
+def create_ticket(username, name, age, seat_type):   #Reset ticket.txt after creating ticket for multiple passengers.
+    with open("ticket1.txt", "a") as file:           #call id_generator() and assigin_seat_number() outside file I/O, to handle errors
         file.write(
             f"Ticket under : {username}\n Ticket Id: {id_genrator(seat_type)}\n Name: {name}\n Age: {age}\n Seat:{assign_seat_number(seat_type)} {seat_type}\n"
         )
 
+#CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
 
 if __name__ == "__main__":
     main()
+
