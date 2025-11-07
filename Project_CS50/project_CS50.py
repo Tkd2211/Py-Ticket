@@ -62,6 +62,24 @@ class Train:
         else:
             status = self.book_upper()
             return status
+        
+
+#seat number data structure
+def assign_seat_number(seat_type):
+    train_seat_number = get_json_data_path(file="train_seat_number")
+    seat_number_array = {}
+    with open(train_seat_number,"r") as seat_number_data:
+        seat_number_array = json.load(seat_number_data)
+        if seat_type == "Lower-seat":
+                seat_number = seat_number_array["seat_number"]["lower_seat_number"].pop(0)
+        elif seat_type == "Middle-seat":
+            seat_number = seat_number_array["seat_number"]["middle_seat_number"].pop(0)
+        else:
+            seat_number = seat_number_array["seat_number"]["upper_seat_number"].pop(0)
+    with open(train_seat_number,"w") as seat_number_file:
+        json.dump(seat_number_array, seat_number_file, indent=4)
+    return seat_number
+
 
 # Main function to run the ticket booking system
 def main():
@@ -70,7 +88,9 @@ def main():
     username = get_verified_user()
     name, age, passenger_count = get_booking_details()
     seat_type = book_ticket(age)
-    create_ticket(username, name, age, passenger_count, seat_type)
+    id = id_genrator(seat_type)
+    seat_number = assign_seat_number(seat_type)
+    create_ticket(username, id, name, age, passenger_count, seat_type, seat_number)
 
 
 # Function to verify registered users
@@ -137,11 +157,11 @@ def id_genrator(seat_type):
 
 
 # Function to create and save the ticket details
-def create_ticket(username, name, age, passenger_count, seat_type):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
+def create_ticket(username, id, name, age, passenger_count, seat_type, seat_number):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
     for i in range(passenger_count):
         with open("ticket.txt", "w") as file:
             file.write(
-                f"Ticket under : {username}\n Ticket Id: {id_genrator(seat_type)}\n Name: {name[i]}\n Age: {age[i]}\n Seat: {seat_type}"
+                f"Ticket under : {username}\n Ticket Id: {id}\n Name: {name[i]}\n Age: {age[i]}\n Seat:{seat_type}:{seat_number}"
             )
 
 
