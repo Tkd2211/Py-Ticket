@@ -86,11 +86,9 @@ def main():
     f = pyfiglet.Figlet(font="slant")  
     print(f.renderText("WELCOME TO PY-TICKET"))
     username = get_verified_user()
-    name, age, passenger_count = get_booking_details()
-    seat_type = book_ticket(age)
-    id = id_genrator(seat_type)
-    seat_number = assign_seat_number(seat_type)
-    create_ticket(username, id, name, age, passenger_count, seat_type, seat_number)
+    passenger_count = get_input(prompt="How many passengers would you like to book seats for? ", input_type="int", error_prompt="Not a valid passenger amount!")
+    book_ticket(username, passenger_count)
+
 
 
 # Function to verify registered users
@@ -104,46 +102,43 @@ def get_verified_user():
 
 
 # Function to get booking details from the user
-def get_booking_details():  
-    print("ENTER YOUR BOOKING DETAILS HERE!")
-    passenger_count = get_input(prompt="How many passengers would you like to book seats for? ", input_type="int", error_prompt="Not a valid passenger amount!")
-    name=[]
-    age=[]
-    for i in range(passenger_count):
-        print (f"\nPassenger {i+1}")
-        name.append(get_input(prompt="Name: ", required=True))
-        age.append(get_input(prompt="Age: ", required=True, input_type="int", error_prompt="Not a valid age!"))
-    return (name, age, passenger_count)
+def get_booking_details(i):  
+    print(f"ENTER YOUR BOOKING DETAILS HERE FOR PASSENGER {i+1}:")
+    name = get_input(prompt="Name: ", required=True)
+    age = get_input(prompt="Age: ", required=True, input_type="int", error_prompt="Not a valid age!")
+    return (name, age)
 
 # AGE-FILTER
 # ADD ALGORITHM TO BOOK SEAT TYPE BASED ON AGE FILTERING
-def book_ticket(a):  
-    try:
-        train = Train()
-    except Exception:
-        sys.exit("Error occured!")
-    for age in a:
+def book_ticket(username, passenger_count):
+    for i in range(passenger_count):
+        name, age = get_booking_details(i)
+        try:
+            train = Train()
+        except Exception:
+            sys.exit("Error occured!")
         if age > 60:
             status = train.book_lower()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
             else: 
-                return "Lower-seat"    
+                seat_type = "Lower-seat"    
         elif 30 <= age <= 60:
             status = train.book_middle()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
             else: 
-                return "Middle-seat"
+                seat_type = "Middle-seat"
         else:
             status = train.book_upper()
             if status == "Full":
                 print("All seats are booked! No seats available.")
                 return None
             else:
-                return "Upper-seat" 
+                seat_type = "Upper-seat" 
+        create_ticket(username, name, age, seat_type)
 
 # ID Genrator
 def id_genrator(seat_type):
@@ -157,12 +152,11 @@ def id_genrator(seat_type):
 
 
 # Function to create and save the ticket details
-def create_ticket(username, id, name, age, passenger_count, seat_type, seat_number):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
-    for i in range(passenger_count):
-        with open("ticket.txt", "w") as file:
-            file.write(
-                f"Ticket under : {username}\n Ticket Id: {id}\n Name: {name[i]}\n Age: {age[i]}\n Seat:{seat_type}:{seat_number}"
-            )
+def create_ticket(username, name, age, seat_type):  # only displays the latest passenger ticket in ticket.txt (save ticket data somewhere).
+    with open("ticket1.txt", "a") as file:
+        file.write(
+            f"Ticket under : {username}\n Ticket Id: {id_genrator(seat_type)}\n Name: {name}\n Age: {age}\n Seat:{assign_seat_number(seat_type)} {seat_type}\n"
+        )
 
 
 if __name__ == "__main__":
