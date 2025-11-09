@@ -160,10 +160,10 @@ def create_ticket(username, name, age, seat_type):
         file.write(
             f"Ticket under : {username}\n Ticket Id: {id}\n Name: {name}\n Age: {age}\n Seat:{seat_number} {seat_type}\n\n"
         )
-    create_booking_chart(username, id, name, age, seat_type, seat_number)
+    add_to_booking_chart(username, id, name, age, seat_type, seat_number)
 
 #CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
-def create_booking_chart(username, id, name, age, seat_type, seat_number):
+def add_to_booking_chart(username, id, name, age, seat_type, seat_number):
     new_booking = {
         "username": username,
         "ticket_id": id,
@@ -171,7 +171,7 @@ def create_booking_chart(username, id, name, age, seat_type, seat_number):
         "age": age,
         "seat_number": seat_number,
         "seat_type": seat_type
-        },
+        }
     booking_chart_path = get_json_data_path("booking_chart")
     if not booking_chart_path.exists():
         with open(booking_chart_path, "w") as file:
@@ -181,8 +181,9 @@ def create_booking_chart(username, id, name, age, seat_type, seat_number):
     ticket_details["bookings"].append(new_booking)
     booking_chart_path = get_json_data_path("booking_chart")
     with open(booking_chart_path, 'w') as file:
-        json.dump(ticket_details,file, indent ='\t')
+        json.dump(ticket_details,file, indent=4)
 
 
 if __name__ == "__main__":
     main()
+
