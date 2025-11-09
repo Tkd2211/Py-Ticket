@@ -16,6 +16,8 @@ def get_json_data_path(file):
         return BASE_DIR / "data" / "train_seats_count.json"
     elif file == "train_seat_number":
         return BASE_DIR / "data" / "train_seat_number.json"
+    elif file == "booking_chart":
+        return BASE_DIR / "data" / "booking_chart.json"
     else:
         raise ValueError(f"Invalid file key: {file}. Expected 'train_seats_count' or 'train_seat_number'.")
 
@@ -151,17 +153,36 @@ def id_genrator(seat_type):
 def create_ticket(username, name, age, seat_type):  
     if seat_type != None:
         seat_number = assign_seat_number(seat_type)
+        id = id_genrator(seat_type)
     else:
         return None
     with open("ticket.txt", "a") as file:   
         file.write(
-            f"Ticket under : {username}\n Ticket Id: {id_genrator(seat_type)}\n Name: {name}\n Age: {age}\n Seat:{seat_number} {seat_type}\n\n"
+            f"Ticket under : {username}\n Ticket Id: {id}\n Name: {name}\n Age: {age}\n Seat:{seat_number} {seat_type}\n\n"
         )
+    create_booking_chart(username, id, name, age, seat_type, seat_number)
 
 #CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
+def create_booking_chart(username, id, name, age, seat_type, seat_number):
+    new_booking = {
+        "username": username,
+        "ticket_id": id,
+        "name": name,
+        "age": age,
+        "seat_number": seat_number,
+        "seat_type": seat_type
+        },
+    booking_chart_path = get_json_data_path("booking_chart")
+    if not booking_chart_path.exists():
+        with open(booking_chart_path, "w") as file:
+            json.dump({"bookings": []}, file, indent=4)
+    with open(get_json_data_path("booking_chart"), 'r') as file:
+        ticket_details = json.load(file)
+    ticket_details["bookings"].append(new_booking)
+    booking_chart_path = get_json_data_path("booking_chart")
+    with open(booking_chart_path, 'w') as file:
+        json.dump(ticket_details,file, indent ='\t')
 
 
 if __name__ == "__main__":
     main()
-
-
