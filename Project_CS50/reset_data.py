@@ -31,7 +31,7 @@ def reset(file_name):
                                     'middle_seat_number': [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
         case "all":
             with open(reset_booking_chart, "w") as file:
-                json.dump({"bookings": []}, file, indent=4)
+                json.dump({"bookings": {}, file, indent=4)
             with open(reset_train_seats_count,"w") as file:
                 json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, file, indent=4)
             with open(reset_train_seat_number,"w") as file:
