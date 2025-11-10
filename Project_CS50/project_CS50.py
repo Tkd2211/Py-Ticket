@@ -166,7 +166,6 @@ def create_ticket(username, name, age, seat_type):
 def add_to_booking_chart(username, id, name, age, seat_type, seat_number):
     new_booking = {
         "username": username,
-        "ticket_id": id,
         "name": name,
         "age": age,
         "seat_number": seat_number,
@@ -175,15 +174,15 @@ def add_to_booking_chart(username, id, name, age, seat_type, seat_number):
     booking_chart_path = get_json_data_path("booking_chart")
     if not booking_chart_path.exists():
         with open(booking_chart_path, "w") as file:
-            json.dump({"bookings": []}, file, indent=4)
+            json.dump({"bookings": {}}, file, indent=4)
     with open(get_json_data_path("booking_chart"), 'r') as file:
         ticket_details = json.load(file)
-    ticket_details["bookings"].append(new_booking)
+    ticket_details["bookings"].update({id: new_booking})
     booking_chart_path = get_json_data_path("booking_chart")
     with open(booking_chart_path, 'w') as file:
-        json.dump(ticket_details,file, indent=4)
-
+        json.dump(ticket_details,file, indent = 4)
 
 if __name__ == "__main__":
     main()
+
 
