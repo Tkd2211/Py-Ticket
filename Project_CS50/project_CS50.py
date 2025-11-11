@@ -19,18 +19,51 @@ def get_json_data_path(file):
     elif file == "booking_chart":
         return BASE_DIR / "data" / "booking_chart.json"
     else:
-        raise ValueError(f"Invalid file key: {file}. Expected 'train_seats_count' or 'train_seat_number'.")
+        raise ValueError(f"Invalid file name: {file}. Expected 'train_seats_count' or 'train_seat_number'.")
+
+def load_json(file):
+    BASE_DIR = Path(__file__).resolve().parent
+    if file == "train_seats_count":
+        file_path = BASE_DIR / "data" / "train_seats_count.json"
+        if not file_path.exists():
+            with open(file_path,"w") as file:
+                json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18 }}, file, indent=4)
+            with open(file_path) as data:
+                return json.load(data)
+        else:
+            with open(file_path) as data:
+                return json.load(data)
+
+    elif file == "train_seat_number":
+        file_path = BASE_DIR / "data" / "train_seat_number.json"
+        if not file_path.exists():
+            with open(file_path,"w") as file:
+                json.dump({'seat_number': {'upper_seat_number': [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 51, 56, 59, 64, 67, 70, 72], 
+                                    'lower_seat_number': [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 52, 55, 57, 60, 63, 65, 68, 71], 
+                                    'middle_seat_number': [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
+            with open(file_path) as data:
+                return json.load(data)
+        else:
+            with open(file_path) as data:
+                return json.load(data)
+    elif file == "booking_chart":
+        file_path = BASE_DIR / "data" / "booking_chart.json"
+        if not file_path.exists():
+            with open(file_path,"w") as file:
+                json.dump({"bookings": {}}, file, indent=4)
+            with open(file_path) as data:
+                    return json.load(data)
+        else:
+            with open(file_path) as data:
+                return json.load(data)
+    else:
+        raise ValueError(f"Invalid file name: {file}. Expected 'train_seats_count', 'train_seat_number' or 'booking_chart'.")
 
 # Train class to handle seat bookings
 class Train:
     def __init__(self):
         self._train_seats_data = get_json_data_path("train_seats_count")
-        if not self._train_seats_data.exists():
-            with open(self._train_seats_data, "w") as file:
-                json.dump({"seats": {"upper_seats": 27, "lower_seats": 27, "middle_seats": 18}}, file, indent=4)
-
-        with open(self._train_seats_data, "r") as data:
-            self.seats_data = json.load(data)
+        self.seats_data = load_json("train_seats_count")
 
     def save(self):
         with open(self._train_seats_data, "w") as file:
@@ -79,16 +112,19 @@ class Train:
 def main():
     f = pyfiglet.Figlet(font="slant")  
     print(f.renderText("WELCOME TO PY-TICKET"))
-    username = get_verified_user()
-    passenger_count = get_input(prompt="How many passengers would you like to book seats for? ", input_type="int", error_prompt="Not a valid passenger amount!")
-    book_ticket(username, passenger_count)
-
+    book_or_cancel = get_input(prompt="Type 'Cancel' if you want to cancel a ticket or PRESS Enter to book a ticket: ",error_prompt="Not a valid input!")
+    if book_or_cancel.lower() == 'cancel':
+        cancel_ticket(get_input(prompt="Ticket_id: ", required=True))
+    elif book_or_cancel is (None or ''): 
+        username = get_verified_user()
+        passenger_count = get_input(prompt="How many passengers would you like to book seats for? ", input_type="int", error_prompt="Not a valid passenger amount!")
+        book_ticket(username, passenger_count)
+    else:
+        print("Not a valid input!")
 
 #seat number data structure
 def assign_seat_number(seat_type):
-    train_seat_number = get_json_data_path(file="train_seat_number")
-    with open(train_seat_number,"r") as seat_number_data:
-        seat_number_array = json.load(seat_number_data)
+    seat_number_array = load_json("train_seat_number")
     try:    
         if seat_type == LOWER :
                 seat_number = seat_number_array["seat_number"]["lower_seat_number"].pop(0)
@@ -101,7 +137,7 @@ def assign_seat_number(seat_type):
     except IndexError:
         return None
 
-    with open(train_seat_number,"w") as seat_number_file:
+    with open(get_json_data_path("train_seat_number"),"w") as seat_number_file:
         json.dump(seat_number_array, seat_number_file, indent=4)
     return seat_number
     
@@ -171,18 +207,13 @@ def add_to_booking_chart(username, id, name, age, seat_type, seat_number):
         "seat_number": seat_number,
         "seat_type": seat_type
         }
-    booking_chart_path = get_json_data_path("booking_chart")
-    if not booking_chart_path.exists():
-        with open(booking_chart_path, "w") as file:
-            json.dump({"bookings": {}}, file, indent=4)
-    with open(get_json_data_path("booking_chart"), 'r') as file:
-        ticket_details = json.load(file)
+    ticket_details = load_json("booking_chart")
     ticket_details["bookings"].update({id: new_booking})
-    booking_chart_path = get_json_data_path("booking_chart")
-    with open(booking_chart_path, 'w') as file:
+    with open(get_json_data_path("booking_chart"), 'w') as file:
         json.dump(ticket_details,file, indent = 4)
+
+#def cancel_ticket(cancellation_id):
 
 if __name__ == "__main__":
     main()
-
 
