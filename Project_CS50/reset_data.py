@@ -29,6 +29,9 @@ def reset(file_name):
                 json.dump({'seat_number': {'upper_seat_number': [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 51, 56, 59, 64, 67, 70, 72], 
                                     'lower_seat_number': [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 52, 55, 57, 60, 63, 65, 68, 71], 
                                     'middle_seat_number': [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
+        case "booking_chart":
+            with open(reset_booking_chart, "w") as file:
+                json.dump({"bookings": []}, file, indent=4)
         case "all":
             with open(reset_booking_chart, "w") as file:
                 json.dump({"bookings": {}}, file, indent=4)
@@ -38,7 +41,6 @@ def reset(file_name):
                 json.dump({'seat_number': {'upper_seat_number': [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 51, 56, 59, 64, 67, 70, 72],
                                     'lower_seat_number': [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 52, 55, 57, 60, 63, 65, 68, 71], 
                                     'middle_seat_number': [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
-            Path("ticket.txt").unlink()
         case _:
             sys.exit("Not a valid file name")
 
