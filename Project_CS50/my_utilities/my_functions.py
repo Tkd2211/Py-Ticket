@@ -1,3 +1,4 @@
+# GET USER INPUT
 def get_input(
     prompt="input: ",
     input_type="str",
@@ -11,7 +12,15 @@ def get_input(
 
     while True:
         if input_type == "str":
-            value = input(prompt).strip()
+            try:
+                value = input(prompt).strip()
+            except Exception:
+                if error_prompt == None:
+                    print("Not an integer value")
+                else:
+                    print(error_prompt)
+                continue
+
         elif input_type == "int":
             try:
                 value = int(input(prompt).strip())
@@ -21,6 +30,7 @@ def get_input(
                 else:
                     print(error_prompt)
                 continue
+        
         elif input_type == "float":
             try:
                 value = float(input(prompt).strip())
@@ -30,6 +40,7 @@ def get_input(
                 else:
                     print(error_prompt)
                 continue
+        
         else:
             raise ValueError(
                 f"Invalid type '{input_type}' passed to get_input(). Valid input_types: 'str', 'int', 'float'."
