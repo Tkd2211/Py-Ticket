@@ -150,6 +150,8 @@ def main():
 # seat number data structure
 def assign_seat_number(seat_type):
     seat_number_array = load_json("train_seat_number")
+    if seat_type == None:
+        return None
     try:
         if seat_type == LOWER:
             seat_number = seat_number_array["seat_number"][LOWER].pop(0)
@@ -190,20 +192,32 @@ def get_booking_details(i):
 # ADD ALGORITHM TO BOOK SEAT TYPE BASED ON AGE FILTERING
 def book_ticket(username, passenger_count):
     train = Train()
+    ticket_details = {"username":username, "name":[], "age":[], "seat_number":[], "seat_type":[], "id":[]}
     with open("ticket.txt", "w") as file:
         pass
     for i in range(passenger_count):
         name, age = get_booking_details(i)
         if age > 60:
             seat_type = train.book_lower()
+
         elif 30 <= age <= 60:
             seat_type = train.book_middle()
         else:
             seat_type = train.book_upper()
-        if not seat_type:
-            return None
-        create_ticket(username, name, age, seat_type)
 
+        seat_number = assign_seat_number(seat_type)
+        id = id_genrator(seat_type)
+
+        if not (seat_type and seat_number and id):
+            return None
+
+        ticket_details["name"].append(name)
+        ticket_details["age"].append(age)
+        ticket_details["seat_number"].append(seat_number)
+        ticket_details["seat_type"].append(seat_type)
+        ticket_details["id"].append(id)            
+
+    create_ticket(ticket_details)
 
 # ID Genrator
 def id_genrator(seat_type):
@@ -215,33 +229,29 @@ def id_genrator(seat_type):
 
 
 # Function to create and save the ticket details
-def create_ticket(username, name, age, seat_type):
-    if seat_type != None:
-        seat_number = assign_seat_number(seat_type)
-        id = id_genrator(seat_type)
-    else:
-        return None
+def create_ticket(ticket_details):
     with open("ticket.txt", "a") as file:
-        file.write(
-            f"Ticket under : {username}\n Ticket Id: {id}\n Name: {name}\n Age: {age}\n Seat:{seat_number} {seat_type}\n\n"
-        )
-    add_to_booking_chart(username, id, name, age, seat_type, seat_number)
+        for i in range(len(ticket_details['id'])):
+            file.write(
+                f"Ticket under : {ticket_details['username']}\n Ticket Id: {ticket_details['id'][i]}\n Name: {ticket_details['name'][i]}\n Age: {ticket_details['age'][i]}\n Seat:{ticket_details['seat_number'][i]} {ticket_details['seat_type'][i]}\n\n"
+            )
+    add_to_booking_chart(ticket_details)
 
 
 # CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
-def add_to_booking_chart(username, id, name, age, seat_type, seat_number):
-    new_booking = {
-        "username": username,
-        "name": name,
-        "age": age,
-        "seat_number": seat_number,
-        "seat_type": seat_type,
-    }
-    ticket_details = load_json("booking_chart")
-    ticket_details["bookings"].update({id: new_booking})
-    with open(get_json_data_path("booking_chart"), "w") as file:
-        json.dump(ticket_details, file, indent=4)
-
+def add_to_booking_chart(ticket_details):
+    booking_chart = load_json("booking_chart")
+    for i in range(len(ticket_details['name'])):
+        new_booking = {
+            "username": ticket_details['username'],
+            "name": ticket_details["name"][i],
+            "age": ticket_details["age"][i],
+            "seat_number": ticket_details["seat_number"][i],
+            "seat_type": ticket_details["seat_type"][i],
+        }
+        booking_chart["bookings"].update({ticket_details['id'][i]: new_booking})
+    with open(get_json_data_path("booking_chart"),"w") as file:
+        json.dump(booking_chart, file, indent=4)
 
 # TICKET CANCELLATION BASED ON UNIQUE TICKET ID.
 def cancel_ticket(cancel_id):
@@ -262,6 +272,7 @@ def cancel_ticket(cancel_id):
     with open(get_json_data_path("booking_chart"),"w") as file:
         json.dump(chart_data, file, indent=4)
     return f"Ticket with ID:{cancel_id} successfully cancelled"
+
 
 if __name__ == "__main__":
     main()
