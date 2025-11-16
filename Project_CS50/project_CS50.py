@@ -1,9 +1,14 @@
-import pyfiglet
-from my_utilities.my_functions import get_input
+from pyfiglet import Figlet
 import json
 from pathlib import Path
 import random
+from my_utilities.my_functions import get_input
+from railroad_map import print_map
 
+# Total fair collected
+fair = 0
+
+# Registered User list
 registered_users = ["User_1", "User_2","User_3"]
 
 LOWER = "Lower-seat"
@@ -52,8 +57,8 @@ def load_json(file):
         file_path = BASE_DIR / "data" / "train_seat_number.json"
         if not file_path.exists():
             with open(file_path, "w") as file:
-                json.dump({'seat_number': {UPPER: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 51, 56, 59, 64, 67, 70, 72],
-                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 52, 55, 57, 60, 63, 65, 68, 71], 
+                json.dump({'seat_number': {UPPER: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 48, 51, 54, 56, 59, 62, 64, 67, 70, 72],
+                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 49, 52, 55, 57, 60, 63, 65, 68, 71], 
                                     MIDDLE: [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
             with open(file_path) as data:
                 return json.load(data)
@@ -127,7 +132,7 @@ class Train:
 
 # Main function to run the ticket booking system
 def main():
-    f = pyfiglet.Figlet(font="slant")
+    f = Figlet(font="slant")
     print(f.renderText("WELCOME TO PY-TICKET"))
     book_or_cancel = get_input(
         prompt="Type 'Cancel' if you want to cancel a ticket or PRESS Enter to book a ticket: ",
@@ -136,7 +141,11 @@ def main():
     if book_or_cancel.lower() == "cancel":
         print(cancel_ticket(get_input(prompt="Ticket_id: ", required=True)))
     elif book_or_cancel is (None or ""):
+        f = Figlet(font="standard")
         username = get_verified_user()
+        print(f.renderText("Route Map "))
+        print_map()
+        select_station()
         passenger_count = get_input(
             prompt="How many passengers would you like to book seats for? ",
             input_type="int",
@@ -147,31 +156,6 @@ def main():
         print("Not a valid input!")
 
 
-# seat number data structure
-def assign_seat_number(seat_type,seat_number_array):
-    
-    if seat_type == None:
-        return None
-    try:
-        if seat_type == LOWER:
-            seat_number = seat_number_array["seat_number"][LOWER].pop(0)
-        elif seat_type == MIDDLE:
-            seat_number = seat_number_array["seat_number"][MIDDLE].pop(0)
-        elif seat_type == UPPER:
-            seat_number = seat_number_array["seat_number"][UPPER].pop(0)
-        else:
-          return None
-    except IndexError:
-        return None
-    return seat_number
-
-
-def update_seat_number(seat_number_array):
-    with open(get_json_data_path("train_seat_number"), "w") as seat_number_file:
-        json.dump(seat_number_array, seat_number_file, indent=4)
-
-
-
 # Function to verify registered users
 def get_verified_user():
     while True:
@@ -180,6 +164,32 @@ def get_verified_user():
             print("Not a registered user! ")
             continue
         return username
+
+
+# Station selection and fair calculator
+def select_station():
+    stations = {"pune": 0, "mumbai": 155, "jaipur": 1195, "delhi": 1407}
+    station_list = list(stations.keys())
+    while True:
+        source = get_input(prompt=f"Enter SOURCE {station_list}: ", required=True).lower()
+        if source not in station_list :
+            print("Not found in the listed stations!")
+            continue
+        elif source == "delhi":
+            print("Last station cannot be the SOURCE station (Train travels from Pune -> New Delhi)")
+            continue
+        station_index = station_list.index(source)
+        while (station_index>=0):
+            station_list.pop(station_index)
+            station_index-=1
+        break
+    while True:
+        destination = get_input(prompt=f"Enter DESTINATION {station_list}: ", required=True).lower()
+        if destination not in station_list :
+                print("Not found in the listed stations!")
+                continue
+        break
+    
 
 
 # Function to get booking details from the user
@@ -236,6 +246,30 @@ def book_ticket(username, passenger_count):
     add_to_booking_chart(booking_chart)
     update_seat_number(seat_number_array)
 
+
+# seat number data structure
+def assign_seat_number(seat_type,seat_number_array):    
+    if seat_type == None:
+        return None
+    try:
+        if seat_type == LOWER:
+            seat_number = seat_number_array["seat_number"][LOWER].pop(0)
+        elif seat_type == MIDDLE:
+            seat_number = seat_number_array["seat_number"][MIDDLE].pop(0)
+        elif seat_type == UPPER:
+            seat_number = seat_number_array["seat_number"][UPPER].pop(0)
+        else:
+          return None
+    except IndexError:
+        return None
+    return seat_number
+
+
+def update_seat_number(seat_number_array):
+    with open(get_json_data_path("train_seat_number"), "w") as seat_number_file:
+        json.dump(seat_number_array, seat_number_file, indent=4)
+
+
 # ID Genrator
 def id_genrator(seat_type):
     if seat_type != None:
@@ -254,11 +288,11 @@ def create_ticket(ticket_details):
             )    
     
 
-
 # CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
 def add_to_booking_chart(booking_chart):   
     with open(get_json_data_path("booking_chart"),"w") as file:
         json.dump(booking_chart, file, indent=4)
+
 
 # TICKET CANCELLATION BASED ON UNIQUE TICKET ID.
 def cancel_ticket(cancel_id):
