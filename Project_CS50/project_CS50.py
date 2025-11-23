@@ -197,7 +197,7 @@ def select_station(passenger_count):
                 continue
         break
     fair += passenger_count*(stations.get(destination) - stations.get(source))/20
-    print(f"\nYour Ticket price for {passenger_count} passengers is ${fair} (Cost per passenger: ${fair/passenger_count})")
+    print(f"\nYour Ticket price for {passenger_count} passengers is ${fair} (Cost per passenger: ${fair/passenger_count:.2f})")
 
 # Function to get booking details from the user
 def get_booking_details(i):
@@ -248,7 +248,7 @@ def book_ticket(username, passenger_count):
                 "age": age,
                 "seat_number": seat_number,
                 "seat_type": seat_type,
-                "ticket cost": fair/passenger_count
+                "ticket cost": f'{fair/passenger_count:.2f}'
             }
             })             
 
