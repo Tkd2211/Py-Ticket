@@ -248,7 +248,7 @@ def book_ticket(username, passenger_count):
                 "age": age,
                 "seat_number": seat_number,
                 "seat_type": seat_type,
-                "ticket cost": f'{fair/passenger_count:.2f}'
+                "ticket cost": fair/passenger_count
             }
             })             
 
