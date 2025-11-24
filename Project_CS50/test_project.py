@@ -1,5 +1,5 @@
 import json
-from project_CS50 import (
+from project import (
     get_json_data_path,
     load_json,
     Train,
@@ -190,4 +190,5 @@ def test_train_save():
     train.seats_data["seats"][LOWER] = 5
     train.save()
     data = load_json("train_seats_count")
+
     assert data["seats"][LOWER] == 5
