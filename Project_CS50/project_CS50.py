@@ -140,14 +140,12 @@ def main():
     if book_or_cancel.lower() == "cancel":
         print(cancel_ticket(get_input(prompt="Ticket_id: ", required=True)))
     elif book_or_cancel is (None or ""):
-        f = Figlet(font="standard")
         username = get_verified_user()
         passenger_count = get_input(
             prompt="How many passengers would you like to book seats for? ",
             input_type="int",
             error_prompt="Not a valid passenger amount!",
         )
-        print(f.renderText("Route Map "))
         print_map()
         select_station(passenger_count)
         book_ticket(username, passenger_count)
@@ -322,4 +320,3 @@ def cancel_ticket(cancel_id):
 
 if __name__ == "__main__":
     main()
-
