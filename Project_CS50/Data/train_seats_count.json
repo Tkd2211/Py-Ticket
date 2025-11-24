@@ -1,7 +1,7 @@
 {
     "seats": {
-        "upper_seats": 27,
-        "lower_seats": 27,
-        "middle_seats": 18
+        "upper-seats": 27,
+        "lower-seats": 27,
+        "middle-seats": 18
     }
 }
