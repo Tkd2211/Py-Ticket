@@ -1,7 +1,6 @@
 import json
 import sys
-from pathlib import Path
-from project_CS50 import get_json_data_path, LOWER, MIDDLE, UPPER
+from project import get_json_data_path, LOWER, MIDDLE, UPPER
 
 def main():
     file_name = get_argument()
