@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import random
 from my_utilities.my_functions import get_input
-from railroad_map import print_map, welcome_msg
+from cli_art import print_map, welcome_msg
 from sys import exit
 
 # Total fair collected this session
@@ -322,3 +322,4 @@ def cancel_ticket(cancel_id):
 
 if __name__ == "__main__":
     main()
+
