@@ -1,9 +1,8 @@
-from pyfiglet import Figlet
 import json
 from pathlib import Path
 import random
 from my_utilities.my_functions import get_input
-from railroad_map import print_map
+from railroad_map import print_map, welcome_msg
 from sys import exit
 
 # Total fair collected this session
@@ -133,8 +132,7 @@ class Train:
 
 # Main function to run the ticket booking system
 def main():
-    f = Figlet(font="slant")
-    print(f.renderText("WELCOME TO PY-TICKET"))
+    welcome_msg()
     book_or_cancel = get_input(
         prompt="Type 'Cancel' if you want to cancel a ticket or PRESS Enter to book a ticket: ",
         error_prompt="Not a valid input!",
@@ -172,7 +170,7 @@ def select_station(passenger_count):
     global fair
     print("Your fair price is depends on the distance of your journey! \n1$ per 20 KM(Kilometer). ")
     try:
-        if_exit = input("If you want to continue with the booking press Enter or if you want to exit the program, press ctrl+C: ")
+        input("If you want to continue with the booking press Enter or if you want to exit the program, press ctrl+C: ")
     except KeyboardInterrupt:
         exit("\nExited the booking app!")
     stations = {"pune": 0, "mumbai": 155, "jaipur": 1195, "delhi": 1407}
