@@ -11,11 +11,12 @@ fair = 0
 # Registered User list
 registered_users = ["User_1", "User_2","User_3"]
 
+# Constants used frequently in the file
 LOWER = "Lower-seat"
 MIDDLE = "Middle-seat"
 UPPER = "Upper-seat"
 
-
+# Gets the file path of the different json files in the data directory
 def get_json_data_path(file):
     BASE_DIR = Path(__file__).resolve().parent
     if file == "train_seats_count":
@@ -29,7 +30,7 @@ def get_json_data_path(file):
             f"Invalid file key: {file}. Expected 'train_seats_count' or 'train_seat_number'."
         )
 
-
+# Loads json file into a variable to manipulate data stored inside the json file.
 def load_json(file):
     BASE_DIR = Path(__file__).resolve().parent
     if file == "train_seats_count":
@@ -195,7 +196,7 @@ def select_station(passenger_count):
     fair += passenger_count*(stations.get(destination) - stations.get(source))/20
     print(f"\nYour Ticket price for {passenger_count} passengers is ${fair} (Cost per passenger: ${fair/passenger_count:.2f})")
 
-# Function to get booking details from the user
+# Get booking details from the user
 def get_booking_details(i):
     print(f"\nENTER YOUR BOOKING DETAILS HERE FOR PASSENGER {i+1}:")
     name = get_input(prompt="Name: ", required=True)
@@ -205,7 +206,7 @@ def get_booking_details(i):
     return (name, age)
 
 
-# ALGORITHM TO BOOK SEAT TYPE BASED ON AGE FILTERING
+# Algorithm to book seat type based on age filtering
 def book_ticket(username, passenger_count):
     global fair
     train = Train()
@@ -251,14 +252,17 @@ def book_ticket(username, passenger_count):
     create_ticket(ticket_details, passenger_count)
     print("\nYour seats have all been booked, open ticket.txt to view your ticket!")
     
-    with open(get_json_data_path("booking_chart"),"w") as file:     # CREATE A BOOKING CHART TO DISPLAY ALL PASSENGERS IN THE TRAIN (JSON FILE)
+    # create a booking chart to display all passengers in the train (json file)
+    with open(get_json_data_path("booking_chart"), "w") as file:
         json.dump(booking_chart, file, indent=4)
 
-    with open(get_json_data_path("train_seat_number"), "w") as seat_number_file:    # Update seat number in the json file
+    # Update seat number in the json file
+    with open(get_json_data_path("train_seat_number"), "w") as seat_number_file:
         json.dump(seat_number_array, seat_number_file, indent=4)
 
 
-# seat number data structure
+
+# Seat number data structure
 def assign_seat_number(seat_type,seat_number_array):    
     if seat_type == None:
         return None
@@ -285,7 +289,7 @@ def id_genrator(seat_type):
     return f"{seat_code}-{random.randint(0,9)}{random.choice('ABCDEFGHIJKLMNPQRSTUVWXYZ')}{random.randint(0,9)}{random.choice('ABCDEFGHIJKLMNPQRSTUVWXYZ')}"
 
 
-# Function to create and save the ticket details
+# Create ticket using ticket details of the passenger
 def create_ticket(ticket_details, passenger_count):
     with open("ticket.txt", "a") as file:
         for i in range(len(ticket_details['id'])):
@@ -294,7 +298,7 @@ def create_ticket(ticket_details, passenger_count):
             )    
     
 
-# TICKET CANCELLATION BASED ON UNIQUE TICKET ID.
+# Ticket cancellation based on unique ticket id
 def cancel_ticket(cancel_id):
     chart_data = load_json("booking_chart")
     seat_count = load_json("train_seats_count")
@@ -320,3 +324,4 @@ def cancel_ticket(cancel_id):
 
 if __name__ == "__main__":
     main()
+
