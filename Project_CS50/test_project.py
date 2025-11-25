@@ -29,7 +29,7 @@ def test_book_lower():
         old+=1
     train.book_lower()
     new = train.seats_data["seats"][LOWER]
-    assert new == old - 1  
+    assert new == old - 1
 
 
 def test_book_middle():
@@ -105,14 +105,14 @@ def test_assign_seat_number():
     }
     n = assign_seat_number(LOWER, seat_data)
     assert n == 1
-    assert seat_data["seat_number"][LOWER] == [2]  
+    assert seat_data["seat_number"][LOWER] == [2]
 
 
 def test_id_genrator():
     generated = id_genrator(LOWER)
     assert isinstance(generated, str)
     assert len(generated) == 6
-    assert generated[0] == "L"  
+    assert generated[0] == "L"
 
     generated = id_genrator(UPPER)
     assert isinstance(generated, str)
@@ -137,14 +137,14 @@ def test_cancel_ticket_valid():
         "ticket cost": 10
     }
 
-    chart_data["Fair collected"] += 10    
+    chart_data["fare collected"] += 10
     with open(chart_path, "w") as file:
         json.dump(chart_data, file, indent=4)
     result = cancel_ticket("T-1A1A")
     assert "successfully cancelled" in result
     updated = load_json("booking_chart")
     assert "T-1A1A" not in updated["bookings"]
-    
+
 
 def test_booking_stops_when_empty():
     train =Train()
