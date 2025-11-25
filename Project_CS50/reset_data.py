@@ -25,23 +25,23 @@ def reset(file_name):
                 json.dump({"seats": {UPPER: 27, LOWER: 27, MIDDLE: 18 }}, file, indent=4)
         case "train_seat_number":
             with open(reset_train_seat_number,"w") as file:
-                json.dump({'seat_number': {UPPER: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 48, 51, 54, 56, 59, 62, 64, 67, 70, 72], 
-                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 49, 52, 55, 57, 60, 63, 65, 68, 71], 
+                json.dump({'seat_number': {UPPER: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 48, 51, 54, 56, 59, 62, 64, 67, 70, 72],
+                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 49, 52, 55, 57, 60, 63, 65, 68, 71],
                                     MIDDLE: [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
         case "booking_chart":
             with open(reset_booking_chart, "w") as file:
-                json.dump({"Fair collected": 0, "bookings": {}}, file, indent=4)
+                json.dump({"fare collected": 0, "bookings": {}}, file, indent=4)
         case "all":
             with open(reset_booking_chart, "w") as file:
-                json.dump({"Fair collected": 0, "bookings": {}}, file, indent=4)
+                json.dump({"fare collected": 0, "bookings": {}}, file, indent=4)
             with open(reset_train_seats_count,"w") as file:
                 json.dump({"seats": {UPPER: 27, LOWER: 27, MIDDLE: 18 }}, file, indent=4)
             with open(reset_train_seat_number,"w") as file:
                 json.dump({'seat_number': {UPPER: [3, 6, 8, 11, 14, 16, 19, 22, 24, 27, 30, 32, 35, 38, 40, 43, 46, 48, 51, 54, 56, 59, 61, 64, 67, 70, 72],
-                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 49, 52, 55, 57, 60, 63, 65, 68, 71], 
+                                    LOWER: [1, 4, 7, 9, 12, 15, 17, 20, 23, 25, 28, 31, 33, 36, 39, 41, 44, 47, 49, 52, 55, 57, 60, 63, 65, 68, 71],
                                     MIDDLE: [2, 5, 10, 13, 18, 21, 26, 29, 34, 37, 42, 45, 50, 53, 58, 61, 66, 69]}}, file, indent=4)
             with open("ticket.txt", "w") as file:
-                pass       
+                pass
         case _:
             sys.exit("Not a valid file name")
 
