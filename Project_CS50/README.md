@@ -5,6 +5,8 @@ PY-TICKET is a command-line based railway ticket booking system inspired by the 
 Users interact with the program entirely through the CLI, providing booking information step-by-step. When seats are successfully assigned, the system generates a `ticket.txt` file containing all booking details. The project also persists seat availability, fare collection data, and ticket records using json files, enabling a continuous and persistant state of data and the program.
 
 The project currently applies its train booking logic on a singular coach with **72 seats** divided into 3 seat type category (Lower: 27 seats, Middle: 27 seats, Upper: 18 seats) in a coach layout exactly similar to found in modern Indian trains. 
+
+Example image of the coach layout: ![Coach layout](images/SL.png)
      
 ## How to Use:
 ### Installation:
