@@ -210,7 +210,7 @@ def get_booking_details(i):
 def book_ticket(username, passenger_count):
     global fair
     train = Train()
-    with open("ticket.txt", "w") as file:
+    with open("ticket.txt", "w") as file:    # Refresh the ticket.txt file from the previous iteration of ticket print.
         pass
     ticket_details = {"username":username, "name":[], "age":[], "seat_number":[], "seat_type":[], "id":[], "Ticket cost": fair}
     booking_chart = load_json("booking_chart")
@@ -324,4 +324,5 @@ def cancel_ticket(cancel_id):
 
 if __name__ == "__main__":
     main()
+
 
